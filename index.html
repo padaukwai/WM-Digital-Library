@@ -1,0 +1,167 @@
+<!-- Digital Library Interface (HTML + CSS + JavaScript) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Library UI</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+    }
+
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 24px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+
+    .form {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 10px 15px;
+      border: none;
+      background: #3498db;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #2980b9;
+    }
+
+    .search-box {
+      margin-bottom: 20px;
+    }
+
+    .book-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 15px;
+    }
+
+    .book {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .book h3 {
+      margin: 0;
+    }
+
+    .delete-btn {
+      margin-top: 10px;
+      background: #e74c3c;
+    }
+
+    .delete-btn:hover {
+      background: #c0392b;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>📚 Digital Library</header>
+
+<div class="container">
+
+  <div class="form">
+    <h2>Add New Book</h2>
+    <input type="text" id="title" placeholder="Book Title">
+    <input type="text" id="author" placeholder="Author">
+    <button onclick="addBook()">Add Book</button>
+  </div>
+
+  <div class="search-box">
+    <input type="text" id="search" placeholder="Search books..." onkeyup="searchBooks()">
+  </div>
+
+  <div class="book-list" id="bookList"></div>
+
+</div>
+
+<script>
+let books = [];
+
+function addBook() {
+  const title = document.getElementById('title').value.trim();
+  const author = document.getElementById('author').value.trim();
+
+  if (!title || !author) {
+    alert('Please enter both title and author');
+    return;
+  }
+
+  books.push({ title, author });
+  document.getElementById('title').value = '';
+  document.getElementById('author').value = '';
+
+  displayBooks(books);
+}
+
+function displayBooks(data) {
+  const list = document.getElementById('bookList');
+  list.innerHTML = '';
+
+  data.forEach((book, index) => {
+    const div = document.createElement('div');
+    div.className = 'book';
+
+    div.innerHTML = `
+      <h3>${book.title}</h3>
+      <p>${book.author}</p>
+      <button class="delete-btn" onclick="deleteBook(${index})">Delete</button>
+    `;
+
+    list.appendChild(div);
+  });
+}
+
+function deleteBook(index) {
+  books.splice(index, 1);
+  displayBooks(books);
+}
+
+function searchBooks() {
+  const keyword = document.getElementById('search').value.toLowerCase();
+
+  const filtered = books.filter(book =>
+    book.title.toLowerCase().includes(keyword) ||
+    book.author.toLowerCase().includes(keyword)
+  );
+
+  displayBooks(filtered);
+}
+</script>
+
+</body>
+</html>
